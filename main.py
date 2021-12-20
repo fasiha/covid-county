@@ -73,15 +73,13 @@ geoid_to_deaths.sort_values('deaths')
 by_bin = geoid_to_deaths.groupby('bin')['deaths'].sum()
 print(by_bin)
 
-print('Dem', sum([by_bin.loc[x] if '+' in x else 0 for x in by_bin.index]), 'Rep',
-      sum([by_bin.loc[x] if '-' in x else 0 for x in by_bin.index]))
-
 by_party = geoid_to_deaths.dropna().groupby(
     lambda x: geoid_to_deaths.loc[x].dem > 0.5)['deaths'].sum()
 print(by_party)
 
 
 ## plot
+# preparation
 def fix_fips(s: str):
   return float(s.split('-')[1])
 
@@ -89,6 +87,12 @@ def fix_fips(s: str):
 covid['fips'] = covid.geoid.map(fix_fips)
 covid['dem'] = [county_to_party[fips] if fips in county_to_party else pd.NA for fips in covid.fips]
 covid['bin'] = [bins[pct_to_bin(x)] if not pd.isna(x) else 'unknown' for x in covid.dem]
+
+census = pd.read_csv(open('co-est2020.csv', errors='replace'), dtype={'STATE': str, 'COUNTY': str})
+census['fips'] = (census.STATE + census.COUNTY).map(float)
+fips_to_pop = {k: v for k, v in zip(census.fips, census.POPESTIMATE2019)}
+covid['pop'] = [fips_to_pop[fips] if fips in fips_to_pop else pd.NA for fips in covid.fips]
+# why does merge not work?
 
 import pylab as plt
 
@@ -101,10 +105,11 @@ bin_to_color = {
 bin_to_linestyle = {k: v for k, v in zip(bins, '- -. : : -. -'.split(' '))}
 bin_to_linewidth = {k: v for k, v in zip(bins, [1, 1, 1, 2, 2, 2])}
 
+# total deaths
 ts = covid.groupby(['bin', 'date'])['deaths'].sum().to_frame()
 fig, ax = plt.subplots()
 for b in bins:
-  res = ts.loc[b].rolling(7).mean().sort_index()
+  res = ts.loc[b].rolling(14).mean().sort_index()
   ax.plot(
       res.index,
       res.deaths,
@@ -112,30 +117,39 @@ for b in bins:
       color=bin_to_color[b],
       linestyle=bin_to_linestyle[b],
       linewidth=bin_to_linewidth[b])
-ax.set_title('NYT, MIT/MEDSL (https://github.com/fasiha/covid-county)', fontsize=12)
-ax.set_ylabel('total deaths, 7-day avg')
+ax.set_title(
+    'US county-level data: NYT, MIT/MEDSL, US Census\n(https://github.com/fasiha/covid-county)',
+    fontsize=12)
+ax.set_ylabel('total deaths, 14-day avg')
 plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
 ax.legend(loc='best', ncol=2)
 plt.tight_layout()
 
 plt.savefig('total_deaths.png', dpi=300)
 
-ts = covid.groupby(['bin', 'date'])['deaths_avg_per_100k'].sum().to_frame()
+# per capita
+g = covid.dropna().groupby(['bin', 'date'])
+ts = (g['deaths'].sum() / g['pop'].sum() * 1e5).to_frame('per_100k')
 
 fig, ax = plt.subplots()
 for b in bins:
-  res = ts.loc[b].sort_index()
+  res = ts.loc[b].rolling(14).mean().sort_index()
   ax.plot(
       res.index,
-      res.deaths_avg_per_100k,
+      res.per_100k,
       label=b,
       color=bin_to_color[b],
       linestyle=bin_to_linestyle[b],
       linewidth=bin_to_linewidth[b])
-ax.set_title('NYT, MIT/MEDSL (https://github.com/fasiha/covid-county)', fontsize=12)
-ax.set_ylabel('deaths per 100k, 7-day avg')
+ax.set_title(
+    'US county-level data: NYT, MIT/MEDSL, US Census\n(https://github.com/fasiha/covid-county)',
+    fontsize=12)
+ax.set_ylabel('deaths per 100k, 14-day avg')
 plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
-ax.legend(loc='best')
+ax.legend(loc='best', ncol=2)
 plt.tight_layout()
 
 plt.savefig('per_capita_deaths.png', dpi=300)
+
+MISSING_POP_DATA = covid[pd.isna(covid['pop'])].sort_values('deaths')
+print(MISSING_POP_DATA)

@@ -17,6 +17,9 @@ I've already downloaded `countypres_2000-2020.csv` from https://dataverse.harvar
 
 2020 data is missing counts for District of Columbia (FIPS 11001)? Party split taken from 2016 election.
 
+## Census
+From https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-counties-total.html I downloaded `co-est2020.csv` from the "Annual Resident Population Estimates for States and Counties: April 1, 2010 to July 1, 2019; April 1, 2020; and July 1, 2020 (CO-EST2020)" link. It's committed in this repo but you can download it yourself too.
+
 ## Covid
 Install [Git](https://git-scm.com) and run this in this directory: `git clone --depth 1 https://github.com/nytimes/covid-19-data.git` (it might take a while)
 
@@ -26,6 +29,7 @@ Note five boroughs of NYC are combined into a single "county". This is taken int
 ```
 python main.py
 ```
+(Takes ~45 seconds on my 2015-vintage laptop.)
 
 ## More results
 | party bin | total Covid-19 deaths |
