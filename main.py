@@ -116,7 +116,7 @@ for b in bins:
 ax.set_title('NYT, MIT/MEDSL (https://github.com/fasiha/covid-county)', fontsize=12)
 ax.set_ylabel('total deaths, 7-day avg')
 plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
-ax.legend(loc='best')
+ax.legend(loc='best', ncol=2)
 plt.tight_layout()
 
 plt.savefig('total_deaths.png', dpi=300)
