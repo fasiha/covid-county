@@ -23,7 +23,7 @@ From https://www.census.gov/programs-surveys/popest/technical-documentation/rese
 ## Covid
 Install [Git](https://git-scm.com) and run this in this directory: `git clone --depth 1 https://github.com/nytimes/covid-19-data.git` (it might take a while)
 
-Note five boroughs of NYC are combined into a single "county". This is taken into account by merging the 2020 Presidential votes from all five boroughs into a single county (since we can't split the Covid deaths into individual boroughs, this is the best we can do).
+Note five boroughs of NYC are combined into a single "county". This is taken into account by merging the 2020 Presidential votes from all five boroughs into a single county (since we can't split the Covid deaths into individual boroughs, this is the best we can do). Fix follows the recommendation per [upstream issue 105](https://github.com/nytimes/covid-19-data/issues/105).
 
 ## Run
 ```

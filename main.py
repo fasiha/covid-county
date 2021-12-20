@@ -23,7 +23,7 @@ if pd.isna(county_to_party[SAN_JOAQUIN_CA_FIPS]):
   g = latest[latest.county_fips == SAN_JOAQUIN_CA_FIPS]
   total = g.candidatevotes.sum()
   county_to_party[SAN_JOAQUIN_CA_FIPS] = float(g.loc[g.party == 'DEMOCRAT'].candidatevotes / total)
-# All five counties in NYC are grouped together
+# All five counties in NYC are grouped together: see https://github.com/nytimes/covid-19-data/issues/105
 NYT_FAKE_NYC_FIPS = 36998.0
 if NYT_FAKE_NYC_FIPS not in county_to_party:
   dem = 0
