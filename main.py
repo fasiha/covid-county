@@ -56,8 +56,7 @@ print(MISSING_VOTE_DATA)
 
 
 def bin_names(edges=(0.2, 0.4, 0.5, 0.6, 0.8)) -> list[str]:
-  return [f'Dem <{"+" if x > 0.5 else "-"}{round(100*x)}%' for x in edges
-         ] + [f'Dem >{"+" if x > 0.5 else "-"}{round(100*x)}%' for x in edges[-1:]]
+  return [f'Dem <{round(100*x)}%' for x in edges] + [f'Dem >{round(100*x)}%' for x in edges[-1:]]
 
 
 def pct_to_bin(pct: float, edges=(0.2, 0.4, 0.5, 0.6, 0.8)):
