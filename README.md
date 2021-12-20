@@ -8,7 +8,7 @@ Install [miniconda](https://docs.conda.io/en/latest/miniconda.html), then in the
 ```console
 conda create -n covid-county
 conda activate covid-county
-conda install pandas ipython matplotlib
+conda install pandas ipython matplotlib tabulate
 ```
 (Let me know if you want pure-Python no-Conda instructions via `venv`.)
 
@@ -33,14 +33,15 @@ python main.py
 
 ## More results
 | party bin | total Covid-19 deaths |
-|---|---|
-| Dem <20% |  38284|
-| Dem <40% | 211416|
-| Dem <50% | 123587|
-| Dem <60% | 196084|
-| Dem <80% | 210070|
-| Dem >80% |  18331|
-| unknown   |   5243| 
+|:-----------|---------:|
+| Rep 80+%   |    38284 |
+| Rep 60–79% |   211416 |
+| Rep 50–59% |   123587 |
+| Dem 50–59% |   196084 |
+| Dem 60–79% |   210070 |
+| Dem 80+%   |    18331 |
+| unknown    |     5243 |
 
+Simply by party:
 - Dem: 424485
 - Rep: 373287

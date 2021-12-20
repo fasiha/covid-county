@@ -56,7 +56,24 @@ print(MISSING_VOTE_DATA)
 
 
 def bin_names(edges=(0.2, 0.4, 0.5, 0.6, 0.8)) -> list[str]:
-  return [f'Dem <{round(100*x)}%' for x in edges] + [f'Dem >{round(100*x)}%' for x in edges[-1:]]
+  ret = []
+  padded = (-1,) + edges + (-1,)
+  for l, r in zip(padded, padded[1:]):
+    if l < 0 or r < 0:
+      if l < 0:
+        # left edge
+        ret.append(f'Rep {round(100*(1-r))}+%')
+      else:
+        ret.append(f'Dem {round(100*l)}+%')
+    else:
+      l = round(l * 100)
+      r = round(r * 100)
+      if l < 50:
+        ret.append(f'Rep {100-r}–{100-l-1}%')
+      else:
+        ret.append(f'Dem {l}–{r-1}%')
+    print(l, r, ret[-1])
+  return ret
 
 
 def pct_to_bin(pct: float, edges=(0.2, 0.4, 0.5, 0.6, 0.8)):
@@ -71,7 +88,7 @@ geoid_to_deaths['bin'] = [
 geoid_to_deaths.sort_values('deaths')
 
 by_bin = geoid_to_deaths.groupby('bin')['deaths'].sum()
-print(by_bin)
+print(by_bin.sort_index(ascending=False).to_markdown())
 
 by_party = geoid_to_deaths.dropna().groupby(
     lambda x: geoid_to_deaths.loc[x].dem > 0.5)['deaths'].sum()
@@ -122,7 +139,7 @@ ax.set_title(
     fontsize=12)
 ax.set_ylabel('total deaths, 14-day avg')
 plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
-ax.legend(loc='best', ncol=2)
+ax.legend(loc='best', ncol=2, prop={'size': 8})
 plt.tight_layout()
 
 plt.savefig('total_deaths.png', dpi=300)
@@ -146,7 +163,7 @@ ax.set_title(
     fontsize=12)
 ax.set_ylabel('deaths per 100k, 14-day avg')
 plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
-ax.legend(loc='best', ncol=2)
+ax.legend(loc='best', ncol=2, prop={'size': 8})
 plt.tight_layout()
 
 plt.savefig('per_capita_deaths.png', dpi=300)
