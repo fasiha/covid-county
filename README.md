@@ -1,11 +1,16 @@
 # Covid County
+## Executive summary
+![Deaths per-100k](./per_capita_deaths.png)
 
+![Total deaths](./total_deaths.png)
 ## Setup
+Install [miniconda](https://docs.conda.io/en/latest/miniconda.html), then in the command line, run
 ```console
 conda create -n covid-county
 conda activate covid-county
 conda install pandas ipython matplotlib
 ```
+(Let me know if you want pure-Python no-Conda instructions via `venv`.)
 
 ## 2020 US presidential election
 Download `countypres_2000-2020.csv` from https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
@@ -13,7 +18,7 @@ Download `countypres_2000-2020.csv` from https://dataverse.harvard.edu/dataset.x
 2020 data is missing counts for District of Columbia (FIPS 11001)? Party split taken from 2016 election.
 
 ## Covid
-Install Git and run this in this directory: `git clone --depth 1 https://github.com/nytimes/covid-19-data.git` (it might take a while)
+Install [Git](https://git-scm.com) and run this in this directory: `git clone --depth 1 https://github.com/nytimes/covid-19-data.git` (it might take a while)
 
 Note five boroughs of NYC are combined into a single "county". This is taken into account by merging the 2020 Presidential votes from all five boroughs into a single county (since we can't split the Covid deaths into individual boroughs, this is the best we can do).
 
@@ -22,7 +27,7 @@ Note five boroughs of NYC are combined into a single "county". This is taken int
 python main.py
 ```
 
-## Results
+## More results
 | party bin | total Covid-19 deaths |
 |---|---|
 | Dem <-20% |  38284| 
