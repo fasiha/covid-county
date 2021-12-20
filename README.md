@@ -13,7 +13,7 @@ conda install pandas ipython matplotlib
 (Let me know if you want pure-Python no-Conda instructions via `venv`.)
 
 ## 2020 US presidential election
-Download `countypres_2000-2020.csv` from https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ
+I've already downloaded `countypres_2000-2020.csv` from https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ but you can download it again to ensure I haven't committed bad data.
 
 2020 data is missing counts for District of Columbia (FIPS 11001)? Party split taken from 2016 election.
 
