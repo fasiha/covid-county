@@ -37,8 +37,8 @@ if NYT_FAKE_NYC_FIPS not in county_to_party:
 
 ## covid
 covid = pd.concat([
-    pd.read_csv('covid-19-data/rolling-averages/us-counties-2020.csv'),
-    pd.read_csv('covid-19-data/rolling-averages/us-counties-2021.csv')
+    pd.read_csv('covid-19-data/rolling-averages/us-counties-2020.csv', parse_dates=['date']),
+    pd.read_csv('covid-19-data/rolling-averages/us-counties-2021.csv', parse_dates=['date'])
 ])
 
 geoid_to_deaths = covid.groupby(['geoid'])['deaths'].sum().to_frame()
@@ -80,3 +80,63 @@ print('Dem', sum([by_bin.loc[x] if '+' in x else 0 for x in by_bin.index]), 'Rep
 by_party = geoid_to_deaths.dropna().groupby(
     lambda x: geoid_to_deaths.loc[x].dem > 0.5)['deaths'].sum()
 print(by_party)
+
+
+## plot
+def fix_fips(s: str):
+  return float(s.split('-')[1])
+
+
+covid['fips'] = covid.geoid.map(fix_fips)
+covid['dem'] = [county_to_party[fips] if fips in county_to_party else pd.NA for fips in covid.fips]
+covid['bin'] = [bins[pct_to_bin(x)] if not pd.isna(x) else 'unknown' for x in covid.dem]
+
+import pylab as plt
+
+plt.style.use('ggplot')
+plt.ion()
+bin_to_color = {
+    k: v
+    for k, v in zip(bins, 'maroon,orangered,lightcoral,skyblue,dodgerblue,mediumblue'.split(','))
+}
+bin_to_linestyle = {k: v for k, v in zip(bins, '- -. : : -. -'.split(' '))}
+bin_to_linewidth = {k: v for k, v in zip(bins, [1, 1, 1, 2, 2, 2])}
+
+ts = covid.groupby(['bin', 'date'])['deaths'].sum().to_frame()
+fig, ax = plt.subplots()
+for b in bins:
+  res = ts.loc[b].rolling(7).mean().sort_index()
+  ax.plot(
+      res.index,
+      res.deaths,
+      label=b,
+      color=bin_to_color[b],
+      linestyle=bin_to_linestyle[b],
+      linewidth=bin_to_linewidth[b])
+ax.set_title('NYT, MIT/MEDSL (https://github.com/fasiha/covid-county)', fontsize=12)
+ax.set_ylabel('total deaths, 7-day avg')
+plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
+ax.legend(loc='best')
+plt.tight_layout()
+
+plt.savefig('total_deaths.png', dpi=300)
+
+ts = covid.groupby(['bin', 'date'])['deaths_avg_per_100k'].sum().to_frame()
+
+fig, ax = plt.subplots()
+for b in bins:
+  res = ts.loc[b].sort_index()
+  ax.plot(
+      res.index,
+      res.deaths_avg_per_100k,
+      label=b,
+      color=bin_to_color[b],
+      linestyle=bin_to_linestyle[b],
+      linewidth=bin_to_linewidth[b])
+ax.set_title('NYT, MIT/MEDSL (https://github.com/fasiha/covid-county)', fontsize=12)
+ax.set_ylabel('deaths per 100k, 7-day avg')
+plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
+ax.legend(loc='best')
+plt.tight_layout()
+
+plt.savefig('per_capita_deaths.png', dpi=300)

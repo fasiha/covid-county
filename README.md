@@ -2,9 +2,9 @@
 
 ## Setup
 ```console
-conda create  -n covid-county
+conda create -n covid-county
 conda activate covid-county
-conda install pandas ipython
+conda install pandas ipython matplotlib
 ```
 
 ## 2020 US presidential election
