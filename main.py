@@ -38,7 +38,8 @@ if NYT_FAKE_NYC_FIPS not in county_to_party:
 ## covid
 covid = pd.concat([
     pd.read_csv('covid-19-data/rolling-averages/us-counties-2020.csv', parse_dates=['date']),
-    pd.read_csv('covid-19-data/rolling-averages/us-counties-2021.csv', parse_dates=['date'])
+    pd.read_csv('covid-19-data/rolling-averages/us-counties-2021.csv', parse_dates=['date']),
+    pd.read_csv('covid-19-data/rolling-averages/us-counties-2022.csv', parse_dates=['date']),
 ])
 
 geoid_to_deaths = covid.groupby(['geoid'])['deaths'].sum().to_frame()
