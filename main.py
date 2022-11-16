@@ -94,6 +94,7 @@ print(by_bin.sort_index(ascending=False).to_markdown())
 by_party = geoid_to_deaths.dropna().groupby(
     lambda x: geoid_to_deaths.loc[x].dem > 0.5)['deaths'].sum()
 print(by_party)
+print("true: Dem, false: Rep")
 
 
 ## plot
