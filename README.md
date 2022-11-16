@@ -3,6 +3,23 @@
 ![Deaths per-100k](./per_capita_deaths.png)
 
 ![Total deaths](./total_deaths.png)
+
+## More results
+| party bin  | total Covid-19 deaths |
+| :--------- | --------------------: |
+| Rep 80+%   |    52584 |
+| Rep 60–79% |   287545 |
+| Rep 50–59% |   167310 |
+| Dem 50–59% |   257946 |
+| Dem 60–79% |   269702 |
+| Dem 80+%   |    23503 |
+| unknown    |     7803 |
+
+Simply by party:
+- Dem: 551151
+- Rep: 507439
+
+
 ## Setup
 Install [miniconda](https://docs.conda.io/en/latest/miniconda.html), then in the command line, run
 ```console
@@ -30,18 +47,3 @@ Note five boroughs of NYC are combined into a single "county". This is taken int
 python main.py
 ```
 (Takes ~45 seconds on my 2015-vintage laptop.)
-
-## More results
-| party bin  | total Covid-19 deaths |
-| :--------- | --------------------: |
-| Rep 80+%   |    52584 |
-| Rep 60–79% |   287545 |
-| Rep 50–59% |   167310 |
-| Dem 50–59% |   257946 |
-| Dem 60–79% |   269702 |
-| Dem 80+%   |    23503 |
-| unknown    |     7803 |
-
-Simply by party:
-- Dem: 551151
-- Rep: 507439
